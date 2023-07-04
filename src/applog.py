@@ -22,6 +22,7 @@ class APPLOG:
         self._log_level = log_level
         self._msgstack_size = msgstack_size
         self._msgtab = []
+        self._permtab = []
         self._severities = ["fatal", "error", "warn", "info", "debug", "trace"]
  
     @property
@@ -80,6 +81,38 @@ class APPLOG:
                 print(m[0], self.severity_text(m[1]), m[2])
         except Exception as e:
             print("applog error writing log message " + str(msg))
+
+
+    @property
+    def permtab(self):
+        '''
+        Returns a list with the 20 last permanent messages
+        '''
+        try:
+            self._permtab.clear()
+            n = 0
+
+            f  = io.open(params.APPLOG_LOGFILE, "r")
+            l = f.readline().strip().split()
+            while (len(l) > 0):
+                n += 1
+                if (n > self._msgstack_size):
+                    self._permtab.pop(0)
+                    n -= 1
+
+                msg = " ".join(l[2:]) if len(l) >= 2 else ""
+                m = (l[0], self._severities.index(l[1]), msg)
+                self._permtab.append(m)
+
+                l = f.readline().strip().split()
+            f.close()
+
+            self._permtab.reverse()
+            return self._permtab
+        except Exception as e:
+            self.log_msg(APPLOG.ERROR, "Error reading permantent messages: " + str(e))
+            return []
+
             
 
 

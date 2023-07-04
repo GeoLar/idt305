@@ -6,8 +6,6 @@ main.py
 import machine
 from machine import Pin
 import time
-import ntptime
-import utime
 
 from applog import APPLOG
 import appconfig as params
@@ -15,7 +13,6 @@ import dht11
 from mqtt_client import MQTT_CLIENT
 from netconn import NETCONN
 from webserver import WEBSERVER
-
 
 # Allocate objects
 log = APPLOG(log_level=APPLOG.DEBUG)
@@ -38,8 +35,7 @@ try:
 except KeyboardInterrupt as e: # Handles the ctrl+c command.
     log.log_msg(APPLOG.INFO, "Keyboard interupt: " + str(e))
 except Exception as e: 
-    log.log_msg(APPLOG.FATAL, "Exception main: " + str(e))
-    log.log_msg(APPLOG.FATAL, str(type(e)))
+    log.log_msg(APPLOG.FATAL, "Exception main: " + str(e) + " " + str(type(e)))
     machine.reset() 
 finally:
     try:

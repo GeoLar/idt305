@@ -26,6 +26,7 @@ class WEBSERVER:
         self._dht11 = dht11
         self._socket: socket.socket
         self._is_listening = False
+        self._display_msgtab = True
 
 
     # Open a port to listen on
@@ -33,7 +34,19 @@ class WEBSERVER:
         ip = self._conn.connect().ifconfig()[0]
         s = socket.socket()		# Creating a socket.
         address = (ip, params.listen_port) 	# Port 80 is the default port for http requests.
-        s.bind(address) 		# Binding the socket to the ip and port number.
+        n = 0
+        while n < 15:
+            n +=1 
+            try:
+                self._log.log_msg(APPLOG.TRACE, "Bind")
+                s.bind(address) 		# Binding the socket to the ip and port number.
+                n = 10
+            except Exception as e:
+                if (n == 10):
+                    raise e
+                time.sleep(2)
+
+        self._log.log_msg(APPLOG.DEBUG, "Listen")
         s.listen(1)				# Starts listening to requests that come in. The number is the max size of the queue for requests.
         self._is_listening = True
         self._log.log_msg(APPLOG.INFO, "listening on " + str(address) + " port " + str(params.listen_port))
@@ -72,6 +85,14 @@ class WEBSERVER:
         except Exception as e:
             self._log.log_msg(APPLOG.ERROR, "webpage: " + str(e))
 
+        msgtab = self._log.msgtab
+        msgtab_button = "showpermmsg?"
+        msgtab_txt = "Show Permanent Messages"
+        if (not self._display_msgtab):
+            msgtab = self._log.permtab
+            msgtab_button = "showlivemsg?"
+            msgtab_txt = "Show Live Messages"
+     
         html1 = f"""
                 <!DOCTYPE html>
                 <html>
@@ -92,6 +113,17 @@ class WEBSERVER:
                                     <form action="./restart"> 
                                         <input type="submit" value="Restart device" />
                                     </form>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:20%;">
+                                    <form action="./{msgtab_button}"> 
+                                        <input type="submit" value="{msgtab_txt}" />
+                                    </form>
+                                </td>
+                                <td style="width:20%;">
+                                </td>
+                                <td style="width:20%;">
                                 </td>
                             </tr>
                         </table>
@@ -125,14 +157,13 @@ class WEBSERVER:
                             </tr>
                 """
 
-        msgtab = self._log.msgtab
         msg_count = len(msgtab)
         for n in range(0,msg_count):
             html2 += f"""
                             <tr>
                                 <td style=" text-align:left; width:20%;">{msgtab[n][0]}</td>
                                 <td style=" text-align:left; width:10%;">{self._log.severity_text(msgtab[n][1])}</td>
-                                <td style=" text-align:left; width:70%;">{str(msgtab[n][2])}</td>
+                                <td style=" text-align:left; width:70%;">{str(msgtab[n][2]).replace('<','&lt').replace('>','&gt')}</td>
                             </tr>
                      """
 
@@ -179,6 +210,10 @@ class WEBSERVER:
 
         if request == '/refresh?':
             pass
+        elif request == '/showpermmsg?':	
+            self._msgtab = self._display_msgtab = False
+        elif request == '/showlivemsg?':	
+            self._msgtab = self._display_msgtab = True
         elif request == '/restart?':	
             client.close()
             self._log.log_msg(APPLOG.INFO, "Restarting device by machine.reset()")
