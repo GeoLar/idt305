@@ -1,7 +1,6 @@
 '''
 main.py
  Main logic to start up the the PICO Microcontroller application. 
-
  When the PICO is started the bootloader executes main.py after boot.py.
 '''
 import machine
