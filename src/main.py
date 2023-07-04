@@ -29,11 +29,6 @@ webserver = WEBSERVER(log=log, conn=conn, dht11=dht11)
 try:
     conn.wifi_connect() # Connect to a network
 
-    try:
-        dht11.measure() # Try do peform a measure to initliaize the sensor and data
-    except Exception as ignored:
-        pass
-
     # loop for ever,
     #   handle request to the webserver  
     #   and send measured values to the MQTT-service
