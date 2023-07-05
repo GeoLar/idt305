@@ -10,6 +10,7 @@ Compilation: Durim Miziraj
 2023-06-04T21:55:19
 '''
 
+import gc
 import machine
 import socket
 import time
@@ -121,18 +122,48 @@ class WEBSERVER:
                                         <input type="submit" value="{msgtab_txt}" />
                                     </form>
                                 </td>
-                                <td style="width:20%;">
-                                </td>
-                                <td style="width:20%;">
-                                </td>
+                                <td style="width:20%;"></td>
+                                <td style="width:20%;"></td>
+                            </tr>
+                        </table>
+                        <br>
+                        <table align=left style="float:left;  text-align:left; table-layout: fixed; width: 100%;" >
+                            <tr>
+                                <td style=" text-align:left; width:20%;"><b>Device uptime</b></td>
+                                <td style=" text-align:left; width:30%;">{self._uptime()}</td>
+                                <td style=" text-align:left; width:50%;"></td>
+                            </tr>
+                        </table>
+                        <br>
+                        <table align=left style="float:left;  text-align:left; table-layout: fixed; width: 100%;" >
+                            <tr>
+                                <td style=" text-align:left; width:20%;"><b>CPU frequency MHz</b></td>
+                                <td style=" text-align:right; width:5%;">{int(machine.freq()/1000000)}</td>
+                                <td style=" text-align:left; width:75%;"></td>
+                            </tr>
+                            <tr>
+                                <td style=" text-align:left; width:20%;"><b>Memory allocated</b></td>
+                                <td style=" text-align:right; width:5%;">{gc.mem_alloc()}</td>
+                                <td style=" text-align:left; width:75%;"></td>
+                            </tr>
+                            <tr>
+                                <td style=" text-align:left; width:20%;"><b>Memory free</b></td>
+                                <td style=" text-align:right; width:5%;">{gc.mem_free()}</td>
+                                <td style=" text-align:left; width:75%;"></td>
+                            </tr>
+                            <tr>
+                                <td style=" text-align:left; width:20%;"></td>
+                                <td style=" text-align:left; width:5%;"></td>
+                                <td style=" text-align:left; width:75%;"></td>
+                            </tr>
+                            <tr>
+                                <td style=" text-align:left; width:20%;"></td>
+                                <td style=" text-align:left; width:5%;"></td>
+                                <td style=" text-align:left; width:75%;"></td>
                             </tr>
                         </table>
                         <br>
                         <table align=left style="float:left;  text-align:left; table-layout: fixed; width: 50%;" >
-                            <tr>
-                                <td style=" text-align:left; width:20%;"><b>Device uptime</b></td>
-                                <td style=" text-align:left; width:30%;">{self._uptime()}</td>
-                            </tr>
                             <tr>
                                 <td style=" text-align:left; width:20%;"><b>Measures read time</b></td>
                                 <td style=" text-align:left; width:30%;">{measure_ts}</td>
@@ -144,6 +175,14 @@ class WEBSERVER:
                             <tr>
                                 <td style=" text-align:left; width:20%;"><b>Humidity</b></td>
                                 <td style=" text-align:left; width:30%;">{humidity}%</td>
+                            </tr>
+                            <tr>
+                                <td style=" text-align:left; width:20%;"></td>
+                                <td style=" text-align:left; width:30%;"></td>
+                            </tr>
+                            <tr>
+                                <td style=" text-align:left; width:20%;"></td>
+                                <td style=" text-align:left; width:30%;"></td>
                             </tr>
                         </table>
                 """
