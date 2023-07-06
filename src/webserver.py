@@ -41,14 +41,13 @@ class WEBSERVER:
             try:
                 self._log.log_msg(APPLOG.TRACE, "Bind")
                 s.bind(address) 		# Binding the socket to the ip and port number.
-                n = 10
+                n = 15
             except Exception as e:
-                if (n == 10):
+                if (n == 15):
                     raise e
                 time.sleep(2)
 
-        self._log.log_msg(APPLOG.DEBUG, "Listen")
-        s.listen(1)				# Starts listening to requests that come in. The number is the max size of the queue for requests.
+        s.listen(1)	# Starts listening to requests that come in. The number is the max size of the queue for requests.
         self._is_listening = True
         self._log.log_msg(APPLOG.INFO, "listening on " + str(address) + " port " + str(params.listen_port))
         return s
@@ -142,18 +141,18 @@ class WEBSERVER:
                                 <td style=" text-align:left; width:75%;"></td>
                             </tr>
                             <tr>
-                                <td style=" text-align:left; width:20%;"><b>Memory allocated</b></td>
+                                <td style=" text-align:left; width:20%;"><b>Memory allocated (KB)</b></td>
                                 <td style=" text-align:right; width:5%;">{gc.mem_alloc()}</td>
                                 <td style=" text-align:left; width:75%;"></td>
                             </tr>
                             <tr>
-                                <td style=" text-align:left; width:20%;"><b>Memory free</b></td>
+                                <td style=" text-align:left; width:20%;"><b>Memory free (KB)</b></td>
                                 <td style=" text-align:right; width:5%;">{gc.mem_free()}</td>
                                 <td style=" text-align:left; width:75%;"></td>
                             </tr>
                             <tr>
-                                <td style=" text-align:left; width:20%;"></td>
-                                <td style=" text-align:left; width:5%;"></td>
+                                <td style=" text-align:left; width:20%;"><b>Total mem (KB)</b></td>
+                                <td style=" text-align:right; width:5%;">{gc.mem_free() + gc.mem_alloc()}</td>
                                 <td style=" text-align:left; width:75%;"></td>
                             </tr>
                             <tr>
